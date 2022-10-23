@@ -1,17 +1,12 @@
-using ProgressBars
-
-function check()
-    δ = 2^(-52)
-    y = nextfloat(1.0)
-    succes = true
-    for k in ProgressBar(1:(2^(52)-1))
-        if y != 1 + k * δ
-            succes = false
-            break
+function check(first::Float64, last::Float64, step::Float64)
+    x = nextfloat(first)
+    while (x < last)
+        if (nextfloat(x) != x + step)
+            return false
         end
-        y = nextfloat(y)
+        x = nextfloat(x)
     end
-    return succes
+    true
 end
 
-println(check())
+println(check(1.0, 2.0, 2.0^(-52)))

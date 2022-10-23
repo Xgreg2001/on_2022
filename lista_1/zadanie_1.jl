@@ -21,12 +21,15 @@ end
 
 function MAX(type)
     MAX = one(type)
-    prev_MAX = MAX
-    while !isinf(MAX)
-        prev_MAX = MAX
+    while !isinf(MAX * 2)
         MAX *= 2
     end
-    return prev_MAX
+    gap = MAX / 2
+    while !isinf(MAX + gap) && gap > one(type)
+        MAX += gap
+        gap /= 2
+    end
+    return MAX
 end
 
 function main()
@@ -52,6 +55,10 @@ function main()
     println("calculated MAX Float16: $(MAX(Float16)), real: $(floatmax(Float16))")
     println("calculated MAX Float32: $(MAX(Float32)), real: $(floatmax(Float32))")
     println("calculated MAX Float64: $(MAX(Float64)), real: $(floatmax(Float64))")
+
+    @assert MAX(Float16) == floatmax(Float16)
+    @assert MAX(Float32) == floatmax(Float32)
+    @assert MAX(Float64) == floatmax(Float64)
 end
 
 main()
