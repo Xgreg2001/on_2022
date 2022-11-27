@@ -32,6 +32,9 @@ function mstycznych(f, pf, x0::Float64, delta::Float64, epsilon::Float64, maxit:
         return (x0, v, 0, 0)
     end
     for k in 1:maxit
+        if abs(pf(x0)) < epsilon
+            return (x0, v, k, 2)
+        end
         x1 = x0 - v / pf(x0)
         v = f(x1)
         if abs(x1 - x0) < delta || abs(v) < epsilon

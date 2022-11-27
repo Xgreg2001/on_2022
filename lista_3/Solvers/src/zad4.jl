@@ -12,7 +12,7 @@ b = 2.0
 (x, y, k, err) = Solvers.mbisekcji(f, a, b, δ, ε)
 
 println("metoda bisekcji")
-println("x ≈ ", x)
+println("x ≈ $x, y ≈ $y, k = $k, err = $err")
 
 # metoda Newtona
 x0 = 1.5
@@ -23,7 +23,7 @@ maxit = 100
 (x, y, k, err) = Solvers.mstycznych(f, pf, x0, δ, ε, maxit)
 
 println("metoda Newtona")
-println("x ≈ ", x)
+println("x ≈ $x, y ≈ $y, k = $k, err = $err")
 
 # metoda siecznych
 x0 = 1.0
@@ -34,7 +34,7 @@ x1 = 2.0
 (x, y, k, err) = Solvers.msiecznych(f, x0, x1, δ, ε, maxit)
 
 println("metoda siecznych")
-println("x ≈ ", x)
+println("x ≈ $x, y ≈ $y, k = $k, err = $err")
 
 println("wolfram alpha")
 println("x ≈ 1.9337537628270212533")
