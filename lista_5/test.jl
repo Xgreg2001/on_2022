@@ -171,9 +171,16 @@ using Test
         A = parse_block_matrix("data/Dane10000_1_1/A.txt")
         b = parse_rhs("data/Dane10000_1_1/b.txt")
 
-        generate_lu!(A)
+        LU = deepcopy(A)
 
-        x = lu_solve(A, b)
+        generate_lu!(LU)
+
+        L = get_L(LU)
+        U = get_U(LU)
+
+        @test A ≈ L * U
+
+        x = lu_solve(LU, b)
 
         for v in x
             @test v ≈ 1.0
@@ -183,6 +190,8 @@ using Test
     @testset "LU with pivoting" begin
         A = parse_block_matrix("data/Dane10000_1_1/A.txt")
         b = parse_rhs("data/Dane10000_1_1/b.txt")
+        
+        
 
         p = generate_lu_with_pivoting!(A)
 

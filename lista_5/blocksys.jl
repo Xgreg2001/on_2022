@@ -50,6 +50,10 @@ end
     return min(B.n, row_idx + B.l)
 end
 
+@inline function get_first_row(B::BlockMatrix, column_idx::Int64)::Int64
+    return max(1, column_idx - B.l)
+end
+
 @inline function get_last_row(B::BlockMatrix, column_idx::Int64)::Int64
     return min(B.n, column_idx + B.l)
 end
@@ -274,4 +278,56 @@ function save_vec_with_error_to_file(file_path::String, x::Vector)
             println(file, v)
         end
     end
+end
+
+
+function Base.:*(A::BlockMatrix, B::BlockMatrix)
+    C = BlockMatrix(A.n, A.l)
+
+    for i in 1:A.n
+        for j in get_first_column(A, i):get_last_column(A, i)
+            sum = 0.0
+            for k in get_first_row(B, i):get_last_row(B, i)
+                sum += A[i, k] * B[k, j]
+            end
+            C[i, j] = sum
+        end
+    end
+    return C
+end
+
+function get_L(LU::BlockMatrix)
+    L = BlockMatrix(LU.n, LU.l)
+    for i in 1:LU.n
+        for j in get_first_column(LU, i):get_last_column(LU, i)
+            if i == j
+                L[i, j] = 1.0
+            elseif i > j
+                L[i, j] = LU[i, j]
+            end
+        end
+    end
+    return L
+end
+
+function get_U(LU::BlockMatrix)
+    U = BlockMatrix(LU.n, LU.l)
+    for i in 1:LU.n
+        for j in get_first_column(LU, i):get_last_column(LU, i)
+            if i <= j
+                U[i, j] = LU[i, j]
+            end
+        end
+    end
+    return U
+end
+
+function Base.isapprox(A::BlockMatrix, B::BlockMatrix)
+    result = true
+    for i in 1:A.n
+        for j in get_first_column(A, i):get_last_column(A, i)
+            result &= isapprox(A[i, j], B[i, j])
+        end
+    end
+    return result
 end
